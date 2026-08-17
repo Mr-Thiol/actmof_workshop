@@ -1,0 +1,9 @@
+# Redundant archives of tracked content — not pushed
+*.zip
+
+# macOS zip-extraction metadata
+__MACOSX/
+
+# Python cache
+__pycache__/
+*.pyc
