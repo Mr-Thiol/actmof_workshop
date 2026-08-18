@@ -10,6 +10,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parents[1]
+DEFAULT_INPUT = PROJECT_ROOT / "Error_data.csv"
+DEFAULT_OUTPUT = PROJECT_ROOT / "figures" / "feature_correlation_heatmap.png"
+
 FEATURES = {
     "rf_intensity_variance": r"$V_I$",
     "rf_fwhm_variance": r"$V_F$",
@@ -23,8 +28,8 @@ FEATURES = {
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--input", type=Path, default=Path("Error_data.csv"))
-    parser.add_argument("--output", type=Path, default=Path("figures/feature_correlation_heatmap.png"))
+    parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument(
         "--method",
         choices=["spearman", "pearson"],

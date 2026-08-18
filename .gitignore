@@ -7,3 +7,11 @@ __MACOSX/
 # Python cache
 __pycache__/
 *.pyc
+
+# Notebook/editor/OS local files
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/

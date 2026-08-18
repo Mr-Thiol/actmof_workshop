@@ -5,11 +5,17 @@ to recover the PRE-threshold continuous intensity/FWHM predictions, then derive:
   10.2 continuous local-support / density features (k-NN distances, KDE)
 """
 from __future__ import annotations
+import argparse
 import time
 from io import StringIO
+from pathlib import Path
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parents[1]
+DEFAULT_OUTPUT = PROJECT_ROOT / "figures" / "followup" / "continuous_features.csv"
 
 FEATURES = ["metal_amount", "modulator", "add_solvent", "reaction_time", "reaction_temperature"]
 SEEDS = [0, 1, 2, 3, 4]
@@ -148,7 +154,14 @@ def apply_actmof_rules(rf_i, rf_f, rule1, rule2, intensity, fwhm):
     return rf_i, rf_f, 0
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
+    return parser.parse_args()
+
+
 def main():
+    args = parse_args()
     data = load_and_aggregate_experiments()
     assert len(data) == 95, len(data)
 
@@ -199,7 +212,8 @@ def main():
             print(f"  ...{held_out + 1}/95 done ({time.perf_counter()-t0:.1f}s)")
 
     feat_df = pd.DataFrame(records)
-    out_path = r"E:\JupyterPjs\MOF_SynBench\ActMOF_Workshop\figures\followup\continuous_features.csv"
+    out_path = args.output
+    out_path.parent.mkdir(parents=True, exist_ok=True)
     feat_df.to_csv(out_path, index=False)
     print(f"Done in {time.perf_counter()-t0:.1f}s. Saved: {out_path}")
 

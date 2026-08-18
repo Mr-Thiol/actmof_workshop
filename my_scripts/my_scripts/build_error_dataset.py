@@ -18,6 +18,10 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from tqdm import tqdm
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+PROJECT_ROOT = SCRIPT_DIR.parents[1]
+DEFAULT_OUTPUT = PROJECT_ROOT / "Error_data.csv"
+
 FEATURES = ["metal_amount", "modulator", "add_solvent", "reaction_time", "reaction_temperature"]
 SEEDS = [0, 1, 2, 3, 4]
 N_TREES = 400
@@ -253,7 +257,7 @@ def initialize_worker(device_queue) -> None:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=Path("Error_data.csv"))
+    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--gpus", help="Comma-separated CUDA device IDs (default: all visible GPUs)")
     parser.add_argument("--workers-per-gpu", type=int, default=1)
     parser.add_argument("--cpu-workers", type=int, default=min(4, os.cpu_count() or 1),
