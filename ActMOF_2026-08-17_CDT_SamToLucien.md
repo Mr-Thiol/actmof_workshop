@@ -419,3 +419,37 @@ two distinct, mutually-exclusive-by-construction failure pathways
   catastrophic cases** — every reported classifier/regression number
   should be read as directional evidence, not a calibrated performance
   guarantee.
+
+---
+
+## 15. Visualization update — 17 Aug 2026 (added after CDT session)
+
+Three new figures were generated to communicate the interaction-effect
+conclusion visually. All saved to `figures/followup/`; script is
+`my_scripts/my_scripts/plot_interaction_three_views.py`.
+
+**Fig A — AND-Gate quadrant scatter** (`interaction_andgate_scatter.png`)
+
+Axes: $d_{\min}$ (x) vs $\max(B_I, B_F)$ (y), colored by $e_{\log}$.
+Background shading divides the space into four risk quadrants. Key
+takeaway: **all 10 catastrophic points sit in the upper-right (pink) risk
+zone** — both conditions must be met simultaneously. The lower-right
+(sparse only) and left half (well-supported, any boundary rate) remain
+essentially risk-free.
+
+**Fig B — Conditional line plot** (`interaction_conditional_lines.png`)
+
+Two lines: $B_F=0$ (blue) vs $B_F>0$ (red), x-axis = $d_{\min}$ bins,
+y-axis = $P(e_{\log}>5)$. The blue line stays flat at 0 across all
+$d_{\min}$ values; the red line rises sharply to 0.56–0.67 once
+$d_{\min}\ge 3$. This "scissors gap" is the clearest quantitative picture
+of the interaction: **sparsity alone is harmless; it only becomes
+dangerous when the boundary is also active.**
+
+**Fig C — Annotated full scatter** (`interaction_annotated_scatter.png`)
+
+All 95 LOO points plotted as $d_{\min}$ vs $B_F$, with shape encoding
+collapse sub-type (triangle = FWHM-collapse, square = Intensity-collapse).
+The two sub-mechanisms fall in different locations and are mutually
+exclusive by code construction ($B_I + B_F \le 1$, see §8.1). Experiment
+IDs of all 10 catastrophic points are labelled directly on the figure.
