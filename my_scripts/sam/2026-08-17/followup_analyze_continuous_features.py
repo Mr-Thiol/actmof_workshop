@@ -14,10 +14,10 @@ from sklearn.metrics import (confusion_matrix, precision_recall_fscore_support,
 from sklearn.preprocessing import StandardScaler
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parents[1]
+PROJECT_ROOT = SCRIPT_DIR.parents[2]
 DEFAULT_INPUT = PROJECT_ROOT / "Error_data.csv"
-DEFAULT_CONTINUOUS = PROJECT_ROOT / "figures" / "followup" / "continuous_features.csv"
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "figures" / "followup"
+DEFAULT_CONTINUOUS = PROJECT_ROOT / "figures" / "sam" / "2026-08-17" / "followup" / "continuous_features.csv"
+DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "figures" / "sam" / "2026-08-17" / "followup"
 
 
 def parse_args() -> argparse.Namespace:

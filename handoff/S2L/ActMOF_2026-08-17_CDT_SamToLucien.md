@@ -14,7 +14,7 @@ deleted — the markdown file is now the single source of truth.
 
 ## 0. Quick visual summary
 
-![Today's summary dashboard](figures/followup/today_summary_dashboard.png)
+![Today's summary dashboard](figures/sam/2026-08-17/followup/today_summary_dashboard.png)
 
 Four panels, each expanded in its own section below: **(A)** unsupervised
 PCA on the 7 original features already separates 8/10 catastrophic points
@@ -70,7 +70,7 @@ correctly-predicted-zero points too. They only stand out once you look at
 confirmation that the interaction hypothesis (§6/§7 of the original
 handoff) is the right framing, not a marginal-outlier story.
 
-Full flags per row saved in `figures/followup/Error_data_with_outlier_flags.csv`.
+Full flags per row saved in `figures/sam/2026-08-17/followup/Error_data_with_outlier_flags.csv`.
 
 ---
 
@@ -83,14 +83,14 @@ Full flags per row saved in `figures/followup/Error_data_with_outlier_flags.csv`
   essentially the sparse-support ↔ boundary-instability axis the working
   hypothesis is built on, recovered unsupervised.
 - **PCA scatter (PC1 vs PC2), colored by `e_log` and by `q_true`,
-  catastrophic points circled** (`figures/followup/pca_2d.png`): **8 of
+  catastrophic points circled** (`figures/sam/2026-08-17/followup/pca_2d.png`): **8 of
   the 10 catastrophic points fall in a visually distinct arm** of the
   projection, separate from the two main point clouds, using no
   supervision at all. The other 2 (`Q078`, `Q086`) sit inside the
   bottom-right "well-supported" cluster instead — worth a closer look
   (see §10).
 - **Feature-redundancy dendrogram**
-  (`figures/followup/feature_dendrogram.png`, distance = `1 − |Spearman ρ|`):
+  (`figures/sam/2026-08-17/followup/feature_dendrogram.png`, distance = `1 − |Spearman ρ|`):
   confirms the correlation heatmap from the original handoff in a cleaner
   form. Two natural families emerge: a **sparse-support family**
   `{d_min, N_R2, V_F}` and a **boundary-instability family**
@@ -110,9 +110,9 @@ Directly executes handoff §8/§12 items 1–3. Two complementary figure types
 per pair, both with **the 10 catastrophic points explicitly labeled by
 experiment ID**, not just marked:
 
-- `figures/followup/priority_pairs_scatter_labeled.png` — raw scatter,
+- `figures/sam/2026-08-17/followup/priority_pairs_scatter_labeled.png` — raw scatter,
   color = `e_log`, catastrophic points circled + text-labeled.
-- `figures/followup/heatmap2_{dmin_BF, dmin_BI, BI_BF, dmin_VF, dmin_VI}.png`
+- `figures/sam/2026-08-17/followup/heatmap2_{dmin_BF, dmin_BI, BI_BF, dmin_VF, dmin_VI}.png`
   — binned conditional catastrophic-rate heatmaps, `P(e_log>5 | x, y)`
   per cell, with sample count `n` annotated (not relying on correlation
   coefficients alone, per handoff §12 item 3).
@@ -182,7 +182,7 @@ was invisible in the full-95 table (original handoff had `B_I` at only
 −0.562). A 7-feature LOOCV linear regression on this 85-point subset gets
 **R²=0.101, MAE=0.463** (vs. std=0.696) — modest, and `B_I` is doing nearly
 all of the work; the other 6 features add little on top of it.
-(`figures/followup/correlations_noncatastrophic.csv`)
+(`figures/sam/2026-08-17/followup/correlations_noncatastrophic.csv`)
 
 ---
 
@@ -249,7 +249,7 @@ rows, confirming the re-simulation is faithful.
   but **on the 85 non-catastrophic points, Spearman jumps to +0.565 (`M_I`)
   and −0.515 (`M_F`)** — same clean-only-after-splitting pattern as `B_I` in
   §6.
-- `figures/followup/continuous_margins_MI_MF.png` (`M_I` vs `M_F`, colored
+- `figures/sam/2026-08-17/followup/continuous_margins_MI_MF.png` (`M_I` vs `M_F`, colored
   by `e_log`, catastrophic points labeled): visually separates three
   regimes exactly as hoped — most points sit at confidently-extreme
   margins (safe), and the 10 catastrophic points split into the two
@@ -289,7 +289,7 @@ metric `d_min` already uses.
 | `kde_cheb` | −0.155 | −0.187 |
 
 Marginal at best — `d3`/`mean_d_k3` edge out plain `d_min` slightly, but
-`kde_cheb` is worse and visually noisy (`figures/followup/density_vs_error.png`):
+`kde_cheb` is worse and visually noisy (`figures/sam/2026-08-17/followup/density_vs_error.png`):
 several safe points sit at equally low local density as the catastrophic
 ones. **Confirmed by the classifier test**: replacing `d_min` with
 `mean_d_k3` drops recall to 0.90 (misses a catastrophic point); replacing
@@ -356,7 +356,7 @@ two distinct, mutually-exclusive-by-construction failure pathways
   markdown file is now the only glossary.
 - `ActMOF_daily_handoff_2026-08-17_followup.md` — this file.
 
-**Scripts** (`my_scripts/my_scripts/`)
+**Scripts** (`my_scripts/sam/2026-08-17/`)
 - `followup_outliers_pca_dendrogram.py` — §2/§3: IQR + Mahalanobis outliers,
   PCA, feature dendrogram.
 - `followup_pairwise_classifier_regression.py` — §4/§5/§6/§7: priority
@@ -372,7 +372,7 @@ two distinct, mutually-exclusive-by-construction failure pathways
   dashboard (PCA, binned heatmap, continuous margins, classifier
   before/after) combining today's headline results into one figure.
 
-**Figures/tables** (`figures/followup/`)
+**Figures/tables** (`figures/sam/2026-08-17/followup/`)
 - `Error_data_with_outlier_flags.csv` — full table with IQR + Mahalanobis
   flags appended.
 - `pca_2d.png`, `feature_dendrogram.png`
@@ -425,8 +425,8 @@ two distinct, mutually-exclusive-by-construction failure pathways
 ## 15. Visualization update — 17 Aug 2026 (added after CDT session)
 
 Three new figures were generated to communicate the interaction-effect
-conclusion visually. All saved to `figures/followup/`; script is
-`my_scripts/my_scripts/plot_interaction_three_views.py`.
+conclusion visually. All saved to `figures/sam/2026-08-17/followup/`; script is
+`my_scripts/sam/2026-08-17/plot_interaction_three_views.py`.
 
 **Fig A — AND-Gate quadrant scatter** (`interaction_andgate_scatter.png`)
 

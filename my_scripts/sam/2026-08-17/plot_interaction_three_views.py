@@ -1,6 +1,6 @@
 """
 Three visualizations of the sparse-support × boundary-instability interaction effect.
-Saves to figures/followup/.
+Saves to figures/sam/2026-08-17/followup/.
 """
 
 import pathlib
@@ -16,9 +16,9 @@ plt.rcParams["font.sans-serif"] = ["DejaVu Sans"]
 plt.rcParams["axes.unicode_minus"] = False
 
 # ── paths ────────────────────────────────────────────────────────────────────
-BASE = pathlib.Path(__file__).resolve().parents[2]
+BASE = pathlib.Path(__file__).resolve().parents[3]
 DATA_CSV   = BASE / "Error_data.csv"
-OUT_DIR    = BASE / "figures" / "followup"
+OUT_DIR    = BASE / "figures" / "sam" / "2026-08-17" / "followup"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ── load & derive columns ─────────────────────────────────────────────────────

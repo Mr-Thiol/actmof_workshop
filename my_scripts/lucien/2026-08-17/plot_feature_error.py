@@ -14,9 +14,9 @@ import numpy as np
 import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parents[1]
+PROJECT_ROOT = SCRIPT_DIR.parents[2]
 DEFAULT_INPUT = PROJECT_ROOT / "Error_data.csv"
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "figures" / "feature_error"
+DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "figures" / "lucien" / "2026-08-17" / "feature_error"
 
 TARGET = "y_log_abs_error"
 FEATURES = [

@@ -14,8 +14,8 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parents[1]
-DEFAULT_OUTPUT = PROJECT_ROOT / "figures" / "followup" / "continuous_features.csv"
+PROJECT_ROOT = SCRIPT_DIR.parents[2]
+DEFAULT_OUTPUT = PROJECT_ROOT / "figures" / "sam" / "2026-08-17" / "followup" / "continuous_features.csv"
 
 FEATURES = ["metal_amount", "modulator", "add_solvent", "reaction_time", "reaction_temperature"]
 SEEDS = [0, 1, 2, 3, 4]

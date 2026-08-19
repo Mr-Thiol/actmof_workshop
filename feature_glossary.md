@@ -1,7 +1,7 @@
 # ActMOF Error-Analysis Feature Glossary
 
 Defines every symbol/abbreviation used in `Error_data.csv`, the daily handoffs,
-and the follow-up analysis in `figures/followup/`.
+and the follow-up analysis in `figures/sam/2026-08-17/followup/`.
 
 ## Identifiers
 
@@ -40,7 +40,8 @@ this condition).
 | Symbol | CSV column | Meaning |
 |---|---|---|
 | `e_abs` | `y_abs_error` | `\|q_pred − q_true\|` — raw absolute reconstruction error. Tracks `q_true` itself (skewed), so **not** the primary target. |
-| `e_log` | `y_log_abs_error` | `\|log(1+q_pred) − log(1+q_true)\|` — log-scale reconstruction error. **Primary error quantity** used for all structure analysis (relative, not absolute, reliability). |
+| `e_log` | `y_log_abs_error` | Historical mean per-seed absolute log reconstruction error. Usually close to `abs(y_signed_log_error)`, but not identical when the five seed reconstructions differ. **Primary error quantity** used for previous structure analysis. |
+| `e_signed` | `y_signed_log_error` | `log1p(q_pred_mean) - log1p(q_true)` — signed aggregate log error. Positive means simulator overprediction / false optimism; negative means underprediction / false pessimism. |
 
 ## Derived flags used in the follow-up analysis (not in the original CSV)
 
@@ -53,13 +54,13 @@ this condition).
 
 ## Continuous features added 17 Aug 2026 (follow-up, §10.1/§10.2 of the original handoff)
 
-Built by `my_scripts/my_scripts/followup_build_continuous_features.py`, which
-**re-simulates** the exact LOO reconstruction from `build_error_dataset.py`
+Built by `my_scripts/sam/2026-08-17/followup_build_continuous_features.py`, which
+**re-simulates** the exact LOO reconstruction from `my_scripts/zeyuan/2026-08-18/build_error_dataset.py`
 (same 5 seeds, same rules, same postprocessing) to recover the *pre-threshold*
 continuous predictions — the original CSV only stores the final,
 already-thresholded values, which are uninformative for margin construction
 once a point has collapsed to 0. Saved to
-`figures/followup/continuous_features.csv`, keyed by `experiment_id`. Re-simulated
+`figures/sam/2026-08-17/followup/continuous_features.csv`, keyed by `experiment_id`. Re-simulated
 `d_min` matched the original `nearest_chebyshev_distance` exactly on all 95 rows
 (validates the re-simulation).
 
@@ -76,7 +77,7 @@ once a point has collapsed to 0. Saved to
 ### 10.2 Continuous local-support / density
 
 All computed in the same **raw-unit Chebyshev** metric as `d_min` (no
-normalization — matches `build_error_dataset.py`'s own convention), over the
+normalization — matches `my_scripts/zeyuan/2026-08-18/build_error_dataset.py`'s own convention), over the
 remaining 94 experiments for each held-out point.
 
 | Symbol | Column | Meaning |

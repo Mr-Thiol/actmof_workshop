@@ -11,9 +11,9 @@ import numpy as np
 import pandas as pd
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-PROJECT_ROOT = SCRIPT_DIR.parents[1]
+PROJECT_ROOT = SCRIPT_DIR.parents[2]
 DEFAULT_INPUT = PROJECT_ROOT / "Error_data.csv"
-DEFAULT_OUTPUT = PROJECT_ROOT / "figures" / "feature_correlation_heatmap.png"
+DEFAULT_OUTPUT = PROJECT_ROOT / "figures" / "lucien" / "2026-08-17" / "feature_correlation_heatmap.png"
 
 FEATURES = {
     "rf_intensity_variance": r"$V_I$",
