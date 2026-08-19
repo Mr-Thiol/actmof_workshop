@@ -1,0 +1,2 @@
+total_candidates,trustworthy_candidates,suspicious_candidates,suspicious_fraction,d_min_min,d_min_median,d_min_max,B_I_min,B_I_median,B_I_max,B_F_min,B_F_median,B_F_max,boundary_risk_min,boundary_risk_median,boundary_risk_max,d_min_eq_4,d_min_gt_4,boundary_risk_eq_0,boundary_risk_gt_0,features_sha256
+6101172,1361004,4740168,0.7769274493490759,0.0,6.0,13.0,0.0,1.0,1.0,0.0,0.0,1.0,0.0,1.0,1.0,712393,4895501,386882,5714290,3b9f824e68c555a3559c6f95904b1f4996ab5335f759fa9b9e92a56cf5002f79
