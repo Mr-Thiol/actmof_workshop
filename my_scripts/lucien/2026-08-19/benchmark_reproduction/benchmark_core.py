@@ -357,6 +357,13 @@ def gaussian_pi(mu: np.ndarray, sd: np.ndarray, best: float, xi: float = 0.01) -
     return norm.cdf((np.asarray(mu, dtype=float) - best - xi) / sd)
 
 
+def gaussian_ei(mu: np.ndarray, sd: np.ndarray, best: float, xi: float = 0.01) -> np.ndarray:
+    sd = np.maximum(np.asarray(sd, dtype=float), MIN_STD)
+    improvement = np.asarray(mu, dtype=float) - best - xi
+    z = improvement / sd
+    return improvement * norm.cdf(z) + sd * norm.pdf(z)
+
+
 def greedy_diverse_batch(candidate_idx: np.ndarray, acq: np.ndarray, x_scaled: np.ndarray, k: int, rng: np.random.Generator):
     candidate_idx = np.asarray(candidate_idx, dtype=np.int64)
     acq = np.asarray(acq, dtype=float)

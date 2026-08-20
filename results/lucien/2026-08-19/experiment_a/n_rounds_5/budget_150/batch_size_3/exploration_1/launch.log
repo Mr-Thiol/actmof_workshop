@@ -1,0 +1,13 @@
+$ /opt/anaconda3/bin/python /Users/lizeyuan/Desktop/Research/Nips-Workshop/actmof_workshop/my_scripts/lucien/2026-08-19/experiment_a/run_experiment_a.py --n-rounds 5 --budget 150 --batch-size 3 --exploration 1
+
+[CONFIG] paired_runs=5 batch_size=3 budget=150 exploration_slots=1 method=GP_Matern52_PI_GATE_2T1S
+[PASS] Gate metadata feature order matches all 6,101,172 benchmark pool rows.
+[OUTPUT] Writing run outputs to /Users/lizeyuan/Desktop/Research/Nips-Workshop/actmof_workshop/results/lucien/2026-08-19/experiment_a/n_rounds_5/budget_150/batch_size_3/exploration_1
+[GP_Matern52_PI run 0] iter=01 n=6 best_q=0
+[GP_Matern52_PI run 0] iter=02 n=9 best_q=12822
+[GP_Matern52_PI run 0] iter=03 n=12 best_q=12822
+[GP_Matern52_PI run 0] iter=04 n=15 best_q=12822
+[GP_Matern52_PI run 0] iter=05 n=18 best_q=12822
+[GP_Matern52_PI run 0] iter=06 n=21 best_q=12822
+[GP_Matern52_PI run 0] iter=07 n=24 best_q=17540
+[GP_Matern52_PI run 0] iter=08 n=27 best_q=50062

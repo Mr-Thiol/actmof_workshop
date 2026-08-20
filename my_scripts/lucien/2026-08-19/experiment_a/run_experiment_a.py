@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run configurable paired vanilla versus fixed-gate ActMOF AL repeats."""
+"""Run configurable Experiment-A ActMOF AL repeats."""
 
 from __future__ import annotations
 
@@ -32,10 +32,10 @@ from benchmark_core import (  # noqa: E402
     SklearnGPSurrogate,
     TARGET,
     VALIDATION_SIZE,
+    gaussian_ei,
     gaussian_crps,
     gaussian_nll,
     gaussian_pi,
-    greedy_diverse_batch,
     kth_top_threshold,
     load_design_grid,
     predict_in_chunks,
@@ -45,10 +45,10 @@ from benchmark_core import (  # noqa: E402
     y_from_model_scale,
     y_to_model_scale,
 )
-from policies import select_gate_batch  # noqa: E402
+from policies import POLICY_NAMES, PolicyContext, make_policy  # noqa: E402
 
-RESULTS_DIR = REPO_ROOT / "results" / "lucien" / "2026-08-19" / "experiment_a"
-GATE_METADATA = RESULTS_DIR / "gate_metadata.npz"
+BASE_RESULTS_DIR = REPO_ROOT / "results" / "lucien" / "2026-08-19" / "experiment_a"
+GATE_METADATA = BASE_RESULTS_DIR / "gate_metadata.npz"
 BASELINE_RESULTS = REPO_ROOT / "results" / "lucien" / "2026-08-19" / "benchmark_reproduction" / "iteration_metrics.csv"
 
 
@@ -64,7 +64,19 @@ def parse_args() -> argparse.Namespace:
         "--exploration", type=int, default=1,
         help="suspicious-region PI slots per gated batch (default: 1)",
     )
+    parser.add_argument(
+        "--policy",
+        choices=POLICY_NAMES,
+        default="imperfection_aware",
+        help="batch-selection policy (default: imperfection_aware)",
+    )
     parser.add_argument("--gate-metadata", type=Path, default=GATE_METADATA)
+    parser.add_argument(
+        "--results-base-dir",
+        type=Path,
+        default=BASE_RESULTS_DIR,
+        help="base directory for settings-aware run outputs",
+    )
     return parser.parse_args()
 
 
@@ -92,7 +104,7 @@ def run_once(
     pool_df: pd.DataFrame,
     suspicious_mask: np.ndarray,
     run: int,
-    method: str,
+    policy_name: str,
     batch_size: int,
     budget: int,
     exploration_slots: int,
@@ -103,9 +115,12 @@ def run_once(
     oracle_best, oracle_min = float(y_raw.max()), float(y_raw.min())
     top1, top01 = kth_top_threshold(y_raw, 0.01), kth_top_threshold(y_raw, 0.001)
 
-    # Both methods intentionally use the successfully reproduced vanilla seed.
+    # Every policy intentionally shares the reproduced vanilla seed so replicate
+    # initial conditions remain paired across policy comparisons.
     seed = (RANDOM_STATE + 10_000 * run + stable_int(METHOD)) % (2**31 - 1)
     rng = np.random.default_rng(seed)
+    policy = make_policy(policy_name, batch_size, exploration_slots)
+    method = policy.method_label
     tried = np.zeros(len(pool_df), dtype=bool)
     initial_idx = rng.choice(len(pool_df), size=INITIAL_EXPERIMENTS, replace=False)
     selected = [int(i) for i in initial_idx]
@@ -118,7 +133,8 @@ def run_once(
         best_q = float(y_raw[best_pool_idx])
         row = {
             "method": method,
-            "family": "Acquisition Ablation" if method == METHOD else "Imperfection-aware",
+            "policy": policy_name,
+            "family": policy.family,
             "run": run,
             "iteration": iteration,
             "configured_batch_size": batch_size,
@@ -184,27 +200,36 @@ def run_once(
         acq_idx = rng.choice(remaining, size=min(ACQ_CANDIDATES_PER_ITER, len(remaining)), replace=False)
         mu, sd = predict_in_chunks(model, x_pool[acq_idx])
         pi = gaussian_pi(mu, sd, float(y_train.max()), xi=0.01)
+        ei = gaussian_ei(mu, sd, float(y_train.max()), xi=0.01)
         n_suspicious = int(suspicious_mask[acq_idx].sum())
-        if method == METHOD:
-            next_idx = greedy_diverse_batch(acq_idx, pi, x_pool, batch_k, rng)
-            policy_diag = {
-                "requested_trustworthy": np.nan,
-                "requested_suspicious": np.nan,
-                "gate_fallback": False,
-                "fallback_slots": "",
-            }
-        else:
-            next_idx, policy_diag = select_gate_batch(
-                acq_idx, pi, x_pool, suspicious_mask, batch_k,
-                min(exploration_slots, batch_k), rng, DIVERSITY_LAMBDA,
-            )
+        policy_result = policy.select_batch(PolicyContext(
+            candidate_idx=acq_idx,
+            remaining_idx=remaining,
+            x_scaled=x_pool,
+            suspicious_mask=suspicious_mask,
+            mu=mu,
+            sd=sd,
+            pi=pi,
+            ei=ei,
+            batch_size=batch_k,
+            exploration_slots=min(exploration_slots, batch_k),
+            rng=rng,
+            diversity_lambda=DIVERSITY_LAMBDA,
+        ))
+        next_idx = policy_result.indices
+        policy_diag = policy_result.diag
         next_idx = [int(i) for i in np.asarray(next_idx).reshape(-1) if not tried[int(i)]]
+        next_idx = list(dict.fromkeys(next_idx))
         if len(next_idx) < batch_k:
             available = remaining[~np.isin(remaining, next_idx)]
             missing = batch_k - len(next_idx)
-            next_idx.extend(int(i) for i in rng.choice(available, size=missing, replace=False))
-            policy_diag["gate_fallback"] = True
-            policy_diag["fallback_slots"] = ";".join(filter(None, [policy_diag["fallback_slots"], "global_fill"]))
+            if missing:
+                next_idx.extend(int(i) for i in rng.choice(available, size=missing, replace=False))
+                policy_diag["gate_fallback"] = True
+                policy_diag["fallback_slots"] = ";".join(
+                    filter(None, [str(policy_diag.get("fallback_slots", "")), "global_fill"])
+                )
+        next_idx = next_idx[:batch_k]
         acq_s = time.perf_counter() - t1
 
         for idx in next_idx:
@@ -255,6 +280,24 @@ def pool_feature_hash(pool_df: pd.DataFrame, chunk_size: int = 250_000) -> str:
     return digest.hexdigest()
 
 
+def settings_results_dir(
+    base_results_dir: Path,
+    policy: str,
+    n_rounds: int,
+    budget: int,
+    batch_size: int,
+    exploration: int,
+) -> Path:
+    return (
+        base_results_dir
+        / policy
+        / f"n_rounds_{n_rounds}"
+        / f"budget_{budget}"
+        / f"batch_size_{batch_size}"
+        / f"exploration_{exploration}"
+    )
+
+
 def main() -> None:
     args = parse_args()
     if args.n_rounds < 1:
@@ -265,12 +308,19 @@ def main() -> None:
         raise SystemExit(f"--budget must be at least INITIAL_EXPERIMENTS={INITIAL_EXPERIMENTS}")
     if not 0 <= args.exploration <= args.batch_size:
         raise SystemExit("--exploration must be between 0 and --batch-size")
-    n_trustworthy = args.batch_size - args.exploration
-    gate_method = f"GP_Matern52_PI_GATE_{n_trustworthy}T{args.exploration}S"
-    gate_label = f"Gate-{n_trustworthy}T{args.exploration}S"
+    policy = make_policy(args.policy, args.batch_size, args.exploration)
+    output_dir = settings_results_dir(
+        args.results_base_dir,
+        args.policy,
+        args.n_rounds,
+        args.budget,
+        args.batch_size,
+        args.exploration,
+    )
     print(
-        f"[CONFIG] paired_runs={args.n_rounds} batch_size={args.batch_size} "
-        f"budget={args.budget} exploration_slots={args.exploration} method={gate_method}"
+        f"[CONFIG] runs={args.n_rounds} batch_size={args.batch_size} "
+        f"budget={args.budget} exploration_slots={args.exploration} "
+        f"policy={args.policy} method={policy.method_label}"
     )
     metadata = np.load(args.gate_metadata)
     suspicious = metadata["suspicious"].astype(bool)
@@ -283,52 +333,37 @@ def main() -> None:
         raise RuntimeError("Gate metadata feature order does not match benchmark pool_df")
     print(f"[PASS] Gate metadata feature order matches all {len(pool_df):,} benchmark pool rows.")
 
-    RESULTS_DIR.mkdir(parents=True, exist_ok=True)
-    vanilla_rows = []
-    vanilla_initial = {}
+    output_dir.mkdir(parents=True, exist_ok=True)
+    print(f"[OUTPUT] Writing run outputs to {output_dir}")
+    rows_all = []
     for run in range(args.n_rounds):
-        rows, _, initial = run_once(
-            pool_df, suspicious, run, METHOD,
+        rows, _, _initial = run_once(
+            pool_df, suspicious, run, args.policy,
             args.batch_size, args.budget, args.exploration,
         )
-        vanilla_initial[run] = initial
-        vanilla_rows.extend(rows)
-        pd.DataFrame(vanilla_rows).to_csv(RESULTS_DIR / "iteration_metrics.csv", index=False)
-    vanilla = pd.DataFrame(vanilla_rows)
-    regression_check(vanilla, args.batch_size)
-
-    gate_rows = []
-    for run in range(args.n_rounds):
-        rows, _, initial = run_once(
-            pool_df, suspicious, run, gate_method,
-            args.batch_size, args.budget, args.exploration,
-        )
-        if initial != vanilla_initial[run]:
-            raise RuntimeError(f"Paired initialization failed for run {run}")
-        gate_rows.extend(rows)
-        pd.concat([vanilla, pd.DataFrame(gate_rows)], ignore_index=True).to_csv(
-            RESULTS_DIR / "iteration_metrics.csv", index=False
-        )
-
-    metrics = pd.concat([vanilla, pd.DataFrame(gate_rows)], ignore_index=True)
+        rows_all.extend(rows)
+        pd.DataFrame(rows_all).to_csv(output_dir / "iteration_metrics.csv", index=False)
+    metrics = pd.DataFrame(rows_all)
+    if args.policy == "gp_m52_pi":
+        regression_check(metrics, args.batch_size)
     run_summary, final_summary = summarize_runs(metrics)
-    run_summary.to_csv(RESULTS_DIR / "run_summary.csv", index=False)
-    final_summary.to_csv(RESULTS_DIR / "final_summary.csv", index=False)
+    run_summary.to_csv(output_dir / "run_summary.csv", index=False)
+    final_summary.to_csv(output_dir / "final_summary.csv", index=False)
 
-    finals = run_summary.pivot(index="run", columns="method", values="final_best_q")
-    differences = finals[gate_method] - finals[METHOD]
-    gate_iters = metrics[(metrics.method == gate_method) & (metrics.iteration > 0)]
-    fallbacks = int(gate_iters["gate_fallback"].astype(bool).sum())
     print("\nExperiment A\n")
-    print(f"Run    Vanilla final q    {gate_label} final q    Difference")
-    for run, row in finals.iterrows():
-        print(f"{run + 1:<7}{row[METHOD]:<19.0f}{row[gate_method]:<22.0f}{differences.loc[run]:.0f}")
-    for method, label in [(METHOD, "Vanilla"), (gate_method, gate_label)]:
-        values = finals[method]
-        print(f"{label} mean ± SD: {values.mean():.1f} ± {values.std(ddof=1):.1f}")
-    print(f"Mean paired difference: {differences.mean():.1f}")
-    print(f"Total gate fallbacks: {fallbacks}")
-    print(f"Fraction of gate iterations requiring fallback: {fallbacks / len(gate_iters):.6f}")
+    print(f"Policy: {args.policy}")
+    print(f"Method: {policy.method_label}")
+    for _, row in run_summary.sort_values("run").iterrows():
+        print(f"Run {int(row['run']) + 1:<3} final q {row['final_best_q']:.0f}")
+    values = run_summary["final_best_q"]
+    print(f"Mean +/- SD: {values.mean():.1f} +/- {values.std(ddof=1):.1f}")
+    policy_iters = metrics[metrics["iteration"] > 0]
+    if "gate_fallback" in policy_iters:
+        fallbacks = int(policy_iters["gate_fallback"].astype(bool).sum())
+        denom = max(len(policy_iters), 1)
+        print(f"Total policy fallbacks: {fallbacks}")
+        print(f"Fraction of policy iterations requiring fallback: {fallbacks / denom:.6f}")
+    print("[SEED] replicate seed formula: RANDOM_STATE + 10000*run + stable_int(GP_Matern52_PI)")
 
 
 if __name__ == "__main__":

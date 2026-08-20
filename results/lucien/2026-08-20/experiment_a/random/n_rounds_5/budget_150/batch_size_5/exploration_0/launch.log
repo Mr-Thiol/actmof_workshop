@@ -1,0 +1,174 @@
+$ /opt/anaconda3/envs/actmof/bin/python /Users/lizeyuan/Desktop/Research/Nips-Workshop/actmof_workshop/my_scripts/lucien/2026-08-19/experiment_a/run_experiment_a.py --n-rounds 5 --budget 150 --batch-size 5 --exploration 0 --policy random --results-base-dir /Users/lizeyuan/Desktop/Research/Nips-Workshop/actmof_workshop/results/lucien/2026-08-20/experiment_a
+
+[CONFIG] runs=5 batch_size=5 budget=150 exploration_slots=0 policy=random method=Random
+[PASS] Gate metadata feature order matches all 6,101,172 benchmark pool rows.
+[OUTPUT] Writing run outputs to /Users/lizeyuan/Desktop/Research/Nips-Workshop/actmof_workshop/results/lucien/2026-08-20/experiment_a/random/n_rounds_5/budget_150/batch_size_5/exploration_0
+[Random run 0] iter=01 n=8 best_q=49500
+[Random run 0] iter=02 n=13 best_q=49500
+[Random run 0] iter=03 n=18 best_q=49500
+[Random run 0] iter=04 n=23 best_q=49500
+[Random run 0] iter=05 n=28 best_q=49500
+[Random run 0] iter=06 n=33 best_q=49500
+[Random run 0] iter=07 n=38 best_q=49500
+[Random run 0] iter=08 n=43 best_q=49500
+[Random run 0] iter=09 n=48 best_q=49500
+[Random run 0] iter=10 n=53 best_q=49500
+[Random run 0] iter=11 n=58 best_q=49500
+[Random run 0] iter=12 n=63 best_q=49500
+[Random run 0] iter=13 n=68 best_q=49500
+[Random run 0] iter=14 n=73 best_q=49500
+[Random run 0] iter=15 n=78 best_q=49500
+[Random run 0] iter=16 n=83 best_q=49500
+[Random run 0] iter=17 n=88 best_q=49500
+[Random run 0] iter=18 n=93 best_q=49500
+[Random run 0] iter=19 n=98 best_q=49500
+[Random run 0] iter=20 n=103 best_q=49500
+[Random run 0] iter=21 n=108 best_q=49500
+[Random run 0] iter=22 n=113 best_q=49500
+[Random run 0] iter=23 n=118 best_q=49500
+[Random run 0] iter=24 n=123 best_q=49500
+[Random run 0] iter=25 n=128 best_q=49500
+[Random run 0] iter=26 n=133 best_q=49500
+[Random run 0] iter=27 n=138 best_q=49500
+[Random run 0] iter=28 n=143 best_q=49500
+[Random run 0] iter=29 n=148 best_q=49500
+[Random run 0] iter=30 n=150 best_q=49500
+[Random run 1] iter=01 n=8 best_q=13382
+[Random run 1] iter=02 n=13 best_q=26848
+[Random run 1] iter=03 n=18 best_q=26848
+[Random run 1] iter=04 n=23 best_q=26848
+[Random run 1] iter=05 n=28 best_q=26848
+[Random run 1] iter=06 n=33 best_q=26848
+[Random run 1] iter=07 n=38 best_q=26848
+[Random run 1] iter=08 n=43 best_q=26848
+[Random run 1] iter=09 n=48 best_q=26848
+[Random run 1] iter=10 n=53 best_q=26848
+[Random run 1] iter=11 n=58 best_q=26848
+[Random run 1] iter=12 n=63 best_q=26848
+[Random run 1] iter=13 n=68 best_q=26848
+[Random run 1] iter=14 n=73 best_q=26848
+[Random run 1] iter=15 n=78 best_q=26848
+[Random run 1] iter=16 n=83 best_q=26848
+[Random run 1] iter=17 n=88 best_q=26848
+[Random run 1] iter=18 n=93 best_q=51004
+[Random run 1] iter=19 n=98 best_q=51004
+[Random run 1] iter=20 n=103 best_q=51004
+[Random run 1] iter=21 n=108 best_q=51004
+[Random run 1] iter=22 n=113 best_q=51004
+[Random run 1] iter=23 n=118 best_q=51004
+[Random run 1] iter=24 n=123 best_q=51004
+[Random run 1] iter=25 n=128 best_q=51004
+[Random run 1] iter=26 n=133 best_q=51004
+[Random run 1] iter=27 n=138 best_q=51004
+[Random run 1] iter=28 n=143 best_q=51004
+[Random run 1] iter=29 n=148 best_q=51004
+[Random run 1] iter=30 n=150 best_q=51004
+[Random run 2] iter=01 n=8 best_q=0
+[Random run 2] iter=02 n=13 best_q=0
+[Random run 2] iter=03 n=18 best_q=0
+[Random run 2] iter=04 n=23 best_q=0
+[Random run 2] iter=05 n=28 best_q=0
+[Random run 2] iter=06 n=33 best_q=0
+[Random run 2] iter=07 n=38 best_q=0
+[Random run 2] iter=08 n=43 best_q=23697
+[Random run 2] iter=09 n=48 best_q=34326
+[Random run 2] iter=10 n=53 best_q=34326
+[Random run 2] iter=11 n=58 best_q=34326
+[Random run 2] iter=12 n=63 best_q=34326
+[Random run 2] iter=13 n=68 best_q=34326
+[Random run 2] iter=14 n=73 best_q=34326
+[Random run 2] iter=15 n=78 best_q=34326
+[Random run 2] iter=16 n=83 best_q=34326
+[Random run 2] iter=17 n=88 best_q=34326
+[Random run 2] iter=18 n=93 best_q=34326
+[Random run 2] iter=19 n=98 best_q=34326
+[Random run 2] iter=20 n=103 best_q=34326
+[Random run 2] iter=21 n=108 best_q=34326
+[Random run 2] iter=22 n=113 best_q=34326
+[Random run 2] iter=23 n=118 best_q=34326
+[Random run 2] iter=24 n=123 best_q=34326
+[Random run 2] iter=25 n=128 best_q=34326
+[Random run 2] iter=26 n=133 best_q=34326
+[Random run 2] iter=27 n=138 best_q=34326
+[Random run 2] iter=28 n=143 best_q=34326
+[Random run 2] iter=29 n=148 best_q=34326
+[Random run 2] iter=30 n=150 best_q=34326
+[Random run 3] iter=01 n=8 best_q=0
+[Random run 3] iter=02 n=13 best_q=0
+[Random run 3] iter=03 n=18 best_q=0
+[Random run 3] iter=04 n=23 best_q=2342
+[Random run 3] iter=05 n=28 best_q=2342
+[Random run 3] iter=06 n=33 best_q=2342
+[Random run 3] iter=07 n=38 best_q=6588
+[Random run 3] iter=08 n=43 best_q=6588
+[Random run 3] iter=09 n=48 best_q=6588
+[Random run 3] iter=10 n=53 best_q=6588
+[Random run 3] iter=11 n=58 best_q=6588
+[Random run 3] iter=12 n=63 best_q=6588
+[Random run 3] iter=13 n=68 best_q=6588
+[Random run 3] iter=14 n=73 best_q=6588
+[Random run 3] iter=15 n=78 best_q=6588
+[Random run 3] iter=16 n=83 best_q=12819
+[Random run 3] iter=17 n=88 best_q=12819
+[Random run 3] iter=18 n=93 best_q=12819
+[Random run 3] iter=19 n=98 best_q=12819
+[Random run 3] iter=20 n=103 best_q=16981
+[Random run 3] iter=21 n=108 best_q=16981
+[Random run 3] iter=22 n=113 best_q=16981
+[Random run 3] iter=23 n=118 best_q=16981
+[Random run 3] iter=24 n=123 best_q=16981
+[Random run 3] iter=25 n=128 best_q=73032
+[Random run 3] iter=26 n=133 best_q=73032
+[Random run 3] iter=27 n=138 best_q=73032
+[Random run 3] iter=28 n=143 best_q=73032
+[Random run 3] iter=29 n=148 best_q=73032
+[Random run 3] iter=30 n=150 best_q=73032
+[Random run 4] iter=01 n=8 best_q=0
+[Random run 4] iter=02 n=13 best_q=19028
+[Random run 4] iter=03 n=18 best_q=19028
+[Random run 4] iter=04 n=23 best_q=19028
+[Random run 4] iter=05 n=28 best_q=19028
+[Random run 4] iter=06 n=33 best_q=19028
+[Random run 4] iter=07 n=38 best_q=19028
+[Random run 4] iter=08 n=43 best_q=19028
+[Random run 4] iter=09 n=48 best_q=19028
+[Random run 4] iter=10 n=53 best_q=19028
+[Random run 4] iter=11 n=58 best_q=19028
+[Random run 4] iter=12 n=63 best_q=19028
+[Random run 4] iter=13 n=68 best_q=19028
+[Random run 4] iter=14 n=73 best_q=71632
+[Random run 4] iter=15 n=78 best_q=71632
+[Random run 4] iter=16 n=83 best_q=71632
+[Random run 4] iter=17 n=88 best_q=71632
+[Random run 4] iter=18 n=93 best_q=71632
+[Random run 4] iter=19 n=98 best_q=71632
+[Random run 4] iter=20 n=103 best_q=71632
+[Random run 4] iter=21 n=108 best_q=71632
+[Random run 4] iter=22 n=113 best_q=71632
+[Random run 4] iter=23 n=118 best_q=71632
+[Random run 4] iter=24 n=123 best_q=71632
+[Random run 4] iter=25 n=128 best_q=71632
+[Random run 4] iter=26 n=133 best_q=71632
+[Random run 4] iter=27 n=138 best_q=71632
+[Random run 4] iter=28 n=143 best_q=71632
+[Random run 4] iter=29 n=148 best_q=71632
+[Random run 4] iter=30 n=150 best_q=71632
+
+Experiment A
+
+Policy: random
+Method: Random
+Run 1   final q 49500
+Run 2   final q 51004
+Run 3   final q 34326
+Run 4   final q 73032
+Run 5   final q 71632
+Mean +/- SD: 55898.8 +/- 16365.9
+Total policy fallbacks: 0
+Fraction of policy iterations requiring fallback: 0.000000
+[SEED] replicate seed formula: RANDOM_STATE + 10000*run + stable_int(GP_Matern52_PI)
+
+$ /opt/anaconda3/envs/actmof/bin/python /Users/lizeyuan/Desktop/Research/Nips-Workshop/actmof_workshop/my_scripts/lucien/2026-08-19/experiment_a/plot_experiment_a.py --results-dir /Users/lizeyuan/Desktop/Research/Nips-Workshop/actmof_workshop/results/lucien/2026-08-20/experiment_a/random/n_rounds_5/budget_150/batch_size_5/exploration_0 --figure-dir /Users/lizeyuan/Desktop/Research/Nips-Workshop/actmof_workshop/figures/lucien/2026-08-20/experiment_a/random/n_rounds_5/budget_150/batch_size_5/exploration_0
+
+Read metrics from /Users/lizeyuan/Desktop/Research/Nips-Workshop/actmof_workshop/results/lucien/2026-08-20/experiment_a/random/n_rounds_5/budget_150/batch_size_5/exploration_0
+Saved figures to /Users/lizeyuan/Desktop/Research/Nips-Workshop/actmof_workshop/figures/lucien/2026-08-20/experiment_a/random/n_rounds_5/budget_150/batch_size_5/exploration_0
